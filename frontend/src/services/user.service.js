@@ -15,6 +15,9 @@ class UserService {
 	getAdminBoard() {
 		return axios.get(API_URL + 'admin', { headers: authHeader() })
 	}
+	getUserBooks() {
+		return axios.get(API_URL + 'book_authors', { headers: authHeader() })
+	}
 }
 
 export default new UserService()

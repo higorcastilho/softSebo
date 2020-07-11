@@ -56,15 +56,16 @@ class BookAuthorController {
       `items[0].volumeInfo.industryIdentifiers[0].identifier`, 
       `items[0].volumeInfo.title`, 
       `items[0].volumeInfo.subtitle`])
-
     const data_authors = request.only([`items[0].volumeInfo.authors[0]`])
+    var imgLink = request.only([`items[0].volumeInfo.imageLinks.smallThumbnail`])
 
     const book = await Book.create({ 
       fk_id_user: auth.user.id,  
-      isbn_10: data.items[0].volumeInfo.industryIdentifiers[0],
-      isbn_13: data.items[0].volumeInfo.industryIdentifiers[1],
+      isbn_10: data.items[0].volumeInfo.industryIdentifiers[0].identifier,
+      isbn_13: data.items[0].volumeInfo.industryIdentifiers[1].identifier,
       title_book: data.items[0].volumeInfo.title,
       subtitle_book: data.items[0].volumeInfo.subtitle,
+      image_link_book: imgLink.items[0].volumeInfo.imageLinks.smallThumbnail
     })
 
     if (data_authors.items) {

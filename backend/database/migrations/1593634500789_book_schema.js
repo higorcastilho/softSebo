@@ -36,6 +36,7 @@ class BookSchema extends Schema {
       table.string('title_book', 50).notNullable()
       table.string('subtitle_book', 50)
       table.string('language_book', 20)
+      table.string('image_link_book', 160)
       table.timestamps()
     })
   }

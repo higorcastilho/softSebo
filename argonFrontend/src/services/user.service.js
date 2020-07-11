@@ -17,8 +17,9 @@ class UserService {
 	}
 
 	getUserBooks() {
-		return axios.get(API_URL + 'books/:id', { headers: authHeader() })
+		return axios.get(API_URL + 'book_authors', { headers: authHeader() })
 	}
+
 }
 
 export default new UserService()

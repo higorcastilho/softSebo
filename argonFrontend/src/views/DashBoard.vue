@@ -1,101 +1,9 @@
 <template>
-  <div class="position-relative">
-            <!-- shape Hero -->
-    <section v-if="loggedIn" class="section-shaped my-0">
-        <div class="shape shape-style-1 shape-default shape-skew">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    <div class="card bg-transparent">
-        <div class="card-header bg-dark border-0">
-            <h3 class="mb-1 ml-2 mt-5 text-white">Acervo</h3>
-        </div>
-        <el-table class="table-responsive table-secondary px-5 py-5"
-                  header-row-class-name="thead-dark"
-                  :data="projects">
-            <el-table-column label="Nome"
-                             min-width="200px"
-                             prop="name"
-                             sortable>
-                <template v-slot="{row}">
-                    <div class="media align-items-center">
-                        <a href="#" class="avatar rounded-circle mr-3">
-                            <img alt="Image placeholder" :src="row.img">
-                        </a>
-                        <div class="media-body">
-                            <span class="font-weight-600 name mb-0 text-sm">{{row.title}}</span>
-                        </div>
-                    </div>
-                </template>
-            </el-table-column>
-            <el-table-column label="Preço"
-                             prop="budget"
-                             min-width="80px"
-                             class="my-5"
-                             sortable>
-            </el-table-column>
-            <el-table-column label="Qtd"
-                             min-width="70px"
-                             prop="status"
-                             sortable>
-                <template v-slot="{row}">
-                    <span class="badge bg-transparent" :class="`badge-${row.statusType}`">
-                        <i class="fa fa-circle"></i>
-                    </span>
-                    <span class="status"> {{row.status}}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column min-width="100px">
-                <template v-slot="{row}">
-                    <el-dropdown trigger="click" class="dropdown">
-                    <span class="btn btn-sm btn-icon-only text-light">
-                      <i class="fa fa-ellipsis-v mt-2"></i>
-                    </span>
-                        <el-dropdown-menu class="dropdown-menu dropdown-menu-arrow show" slot="dropdown">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-            </el-table-column>
-        </el-table>
-    </div>
-  </section>
-  <section v-else class="section-profile-cover section-shaped my-0">
-      <div class="shape shape-style-1 shape-primary shape-skew alpha-4">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-      </div>
-  </section>
-</div>
 </template>
 <script>
   import UserService from '../services/user.service';
-  import { Table, TableColumn, DropdownMenu, DropdownItem, Dropdown} from 'element-ui'
   export default {
     name: 'DashBoard',
-    components: {
-      [Table.name]: Table,
-      [TableColumn.name]: TableColumn,
-      [Dropdown.name]: Dropdown,
-      [DropdownItem.name]: DropdownItem,
-      [DropdownMenu.name]: DropdownMenu,
-    },
-
     computed: {
       loggedIn() {
         return this.$store.state.auth.status.loggedIn
@@ -105,7 +13,20 @@
     created() {
       if (this.loggedIn) {
         UserService.getUserBooks().then( response => {
-          console.log(response.data)
+          const books = response.data
+          books.forEach( item => {
+            const transitoryObject = {
+              img: '',
+              title: '',
+              budget: 'R$10,00',
+              status: '',
+              statusType: '',
+              completion: ''
+            }
+            transitoryObject.img = item.image_link_book
+            transitoryObject.title = item.title_book
+            this.projects.push(transitoryObject)
+          })
         })
       }
     },
@@ -192,7 +113,32 @@
   }
 </script>
 <style type="text/css">
-  .table-responsive{
-    overflow: hidden !important;
+  table {
+    font-family: 'Open Sans', sans-serif;
+    width: 750px;
+    border-collapse: collapse;
+    border: 3px solid #44475C;
+    margin: 10px 10px 0 10px;
+  }
+
+  table th {
+    text-transform: uppercase;
+    text-align: left;
+    background: #44475C;
+    color: #FFF;
+    padding: 8px;
+    min-width: 30px;
+  }
+
+  table td {
+    text-align: left;
+    padding: 8px;
+    border-right: 2px solid #7D82A8;
+  }
+  table td:last-child {
+    border-right: none;
+  }
+  table tbody tr:nth-child(2n) td {
+    background: #D4D8F9;
   }
 </style>
