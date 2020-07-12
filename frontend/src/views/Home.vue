@@ -4,16 +4,16 @@
     <table>
       <thead>
         <tr>
-          <th>Imagem</th>
-          <th>Nome</th>
+          <th></th>
+          <th>Título</th>
           <th>Preço</th>
           <th>Autor</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in get_rows()" :key="row.id" :style="{display: row.match}" >
+        <tr v-for="row in get_rows()" :key="row.id" :style="{display: row.match}">
           <td><img :src="row.img" /></td>
-          <td v-if="row.subtitle">{{row.title}}: {{row.subtitle}}</td>
+          <td style="width: 50%" v-if="row.subtitle">{{row.title}}: {{row.subtitle}}</td>
           <td v-else>{{row.title}}</td>
           <td>{{row.price}}</td>
           <td>{{row.author}}</td>
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       rows: [],
-      elementsPerPage: 5,
+      elementsPerPage: 8,
       currentPage: 1,
       search: ''
     }
@@ -115,10 +115,19 @@ export default {
 };
 </script>
 <style type="text/css">
+  input {
+    margin-top: 2em
+  }
   img {
     height: 6em
   }
-  .container {
-    background-color: skyblue
+  table {
+    margin-top: 2em;
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 2em 0;
+  }
+  td {
+    padding: 0.4em 0;
   }
 </style>

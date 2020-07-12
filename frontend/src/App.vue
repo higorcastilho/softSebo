@@ -9,7 +9,7 @@
       <div class="navbar-nav mr-auto">
         <li v-if="currentUser" class="nav-item">
           <router-link to="/home" class="nav-link">
-            <font-awesome-icon icon="home" />Home
+            <font-awesome-icon icon="home" /> Início
           </router-link>
         </li>
         <li v-if="!currentUser" class="nav-item">
@@ -23,7 +23,7 @@
           <router-link to="/mod" class="nav-link">Moderator Board</router-link>
         </li>
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
+          <router-link v-if="currentUser" to="/user" class="nav-link">Perfil</router-link>
         </li>
       </div>
 
