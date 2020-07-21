@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    aasdasd
-    asdasdasd
-    asdasd
-    asdasd
+    
   </div>
 </template>
 
