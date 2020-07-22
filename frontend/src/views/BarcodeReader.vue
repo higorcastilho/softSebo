@@ -37,6 +37,7 @@ export default {
       } else {
         if (this.scannerAttempts >= 5) {
           alert('Não é possível ler o código do livro. Por favor, tente novamente.')
+          aaaaaaaa
         }
       }
 
