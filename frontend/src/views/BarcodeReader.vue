@@ -1,53 +1,19 @@
 <template>
   <div class="container">
-    <div></div>
+    
   </div>
 </template>
 
 <script>
-import UserService from '../services/user.service'
-export default {
-  name: 'Home',
-  data() {
-    return {
-      rows: [],
-      elementsPerPage: 8,
-      currentPage: 1,
-      search: ''
-    }
-  },
-  methods: {
-    num_pages() {
-      return Math.ceil(this.rows.length/this.elementsPerPage)
-    },
-    get_rows() {
-      var start = (this.currentPage-1) * this.elementsPerPage
-      var end = start + this.elementsPerPage
-      return this.rows.slice(start, end)
-    },
-    change_page(page) {
-      this.currentPage = page
-    },
-    searching() {
-      this.rows.sort((a, b) => {
-        if (a.match > b.match) return 1
-        if (a.match < b.match) return -1
-        return 0
-      })
-      const searchInput = this.search
-      for ( var i = 0; i < this.rows.length; i++) {
-        var title = this.rows[i].title
-        var author = this.rows[i].author
-        var localizationNumTitle = title.toUpperCase().indexOf(searchInput.toUpperCase())
-        var localizationNumAuthor = author.toUpperCase().indexOf(searchInput.toUpperCase())
-        if (localizationNumTitle > -1 || localizationNumAuthor > -1) {
-          this.rows[i].match = ''
-        } else {
-          this.rows[i].match = 'none'
-        }
-      }
-    }
+import Quagga from 'quagga'
+import BookSearchEngine from '../services/BookSearchEngine.js'
 
+export default {
+  name: 'BarcodeReader',
+  data () {
+    return {
+      scannerAttempts: 0
+    }
   },
   computed: {
     currentUser() {
@@ -60,27 +26,50 @@ export default {
     }
   },
   created() {
+    const onDetected = result => {
+      Quagga.offDetected(onDetected)
+
+      let isbn = result.codeResult.code
+      if (BookSearchEngine.getValidateIsbn(isbn)) {
+
+        BookSearchEngine.getGoogleBooksApi(isbn)
+        
+      } else {
+        if (this.scannerAttempts >= 5) {
+          alert('Não é possível ler o código do livro. Por favor, tente novamente.')
+        }
+      }
+
+      this.scannerAttempts++
+      Quagga.onDetected(onDetected)
+    }
+
     if (this.currentUser) {
-      UserService.getUserBooks().then( response => {
-        const books = response.data
-        books.forEach( item => {
-          const transitoryObject = {
-            id: '',
-            img: '',
-            title: '',
-            subtitle: '',
-            price: 'R$10,00',
-            author: '',
-            match: ''
+      Quagga.init({
+        inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          target: document.querySelector('.container'),
+          constraints: {
+            facingMode: 'environment'
           }
-          transitoryObject.id = item.id_book
-          transitoryObject.img = item.image_link_book
-          transitoryObject.title = item.title_book
-          transitoryObject.subtitle = item.subtitle_book
-          transitoryObject.author = item.name_author
-          this.rows.unshift(transitoryObject)
-        })
-      })
+        },
+        numOfWorkers: 1,
+        locate: true,
+        decoder: {
+          readers: ['ean_reader']
+        }
+      }, err => {
+        if (err) {
+          console.log(err)
+          return ''
+        }
+        console.log("Initialization finished. Ready to start")
+        Quagga.start()
+      },
+
+      Quagga.onDetected(onDetected) 
+      )
     }
   }
 };

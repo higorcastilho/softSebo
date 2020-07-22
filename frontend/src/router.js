@@ -37,6 +37,12 @@ export const router = new Router({
 			name: 'user',
 			// lazy-loaded
 			component: () => import('./views/BoardUser.vue')
+		},
+		{
+			path: '/barcodereader',
+			name: 'barcodereader',
+			//lazy-loaded
+			component: () => import('./views/BarcodeReader.vue')
 		}    
 	]
 })

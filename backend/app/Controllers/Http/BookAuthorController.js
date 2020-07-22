@@ -51,39 +51,48 @@ class BookAuthorController {
    * @param {Response} ctx.response
    */
   async store ({ request, auth }) {
-    const data = request.only([
+
+
+    const data = request.body
+
+    /*const data = request.only([
       `items[0].volumeInfo.industryIdentifiers[1].identifier`,
       `items[0].volumeInfo.industryIdentifiers[0].identifier`, 
       `items[0].volumeInfo.title`, 
       `items[0].volumeInfo.subtitle`])
-    const data_authors = request.only([`items[0].volumeInfo.authors[0]`])
-    var imgLink = request.only([`items[0].volumeInfo.imageLinks.smallThumbnail`])
+    var imgLink = request.only([`items[0].volumeInfo.imageLinks.smallThumbnail`])*/
+    const data_authors = data.author_name
 
     const book = await Book.create({ 
       fk_id_user: auth.user.id,  
-      isbn_10: data.items[0].volumeInfo.industryIdentifiers[0].identifier,
-      isbn_13: data.items[0].volumeInfo.industryIdentifiers[1].identifier,
-      title_book: data.items[0].volumeInfo.title,
-      subtitle_book: data.items[0].volumeInfo.subtitle,
-      image_link_book: imgLink.items[0].volumeInfo.imageLinks.smallThumbnail
+      isbn_10: data.isbn_10,
+      isbn_13: data.isbn_13,
+      title_book: data.title_book,
+      subtitle_book: data.subtitle_book,
+      image_link_book: data.image_link_book
     })
 
-    if (data_authors.items) {
+    var author = await Author.create({
+        name_author: data_authors ? data_authors : ''
+    }) 
+
+    /*if (data_authors) {
       var author = await Author.create({
-        name_author: data_authors.items[0].volumeInfo.authors[0]  
+        name_author: data_authors  
       }) 
     } else {
       var author = await Author.create({
         name_author: ''
       })
-    }
+    }*/
 
     const book_author = await BookAuthor.create({
       id_book: book.id,
       id_author: author.id
     })
 
-    return book_author
+    console.log(book)
+    return book_author 
   }
 
   /**
