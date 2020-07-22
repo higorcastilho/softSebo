@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    
   </div>
 </template>
 
@@ -29,10 +28,20 @@ export default {
     const onDetected = result => {
       Quagga.offDetected(onDetected)
 
-      let isbn = result.codeResult.code
-      if (BookSearchEngine.getValidateIsbn(isbn)) {
+      var isbn = result.codeResult.code
+      var isbnCounter = ''
 
-        BookSearchEngine.getGoogleBooksApi(isbn)
+      if (BookSearchEngine.getValidateIsbn(isbn)) {
+        try {
+          if (isbn == isbnCounter) {
+            throw new Error("Este livro já foi adicionado.")
+          }
+            isbnCounter = isbn
+            BookSearchEngine.getGoogleBooksApi(isbn)
+        } catch(e) {
+          alert(e.message)
+        }
+
         
       } else {
         if (this.scannerAttempts >= 5) {
@@ -75,19 +84,5 @@ export default {
 };
 </script>
 <style type="text/css">
-  input {
-    margin-top: 2em
-  }
-  img {
-    height: 6em
-  }
-  table {
-    margin-top: 2em;
-    min-width: 100%;
-    border-collapse: separate;
-    border-spacing: 2em 0;
-  }
-  td {
-    padding: 0.4em 0;
-  }
+
 </style>
