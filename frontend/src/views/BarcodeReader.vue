@@ -11,7 +11,8 @@ export default {
   name: 'BarcodeReader',
   data () {
     return {
-      scannerAttempts: 0
+      scannerAttempts: 0,
+      isbnCounter: 0
     }
   },
   computed: {
@@ -29,15 +30,15 @@ export default {
       Quagga.offDetected(onDetected)
 
       var isbn = result.codeResult.code
-      var isbnCounter = ''
 
       if (BookSearchEngine.getValidateIsbn(isbn)) {
+
         try {
-          if (isbn == isbnCounter) {
+          if (isbn === this.isbnCounter) {
             throw new Error("Este livro já foi adicionado.")
           }
-            isbnCounter = isbn
             BookSearchEngine.getGoogleBooksApi(isbn)
+            this.isbnCounter = isbn
         } catch(e) {
           alert(e.message)
         }
@@ -46,7 +47,6 @@ export default {
       } else {
         if (this.scannerAttempts >= 5) {
           alert('Não é possível ler o código do livro. Por favor, tente novamente.')
-          aaaaaaaa
         }
       }
 

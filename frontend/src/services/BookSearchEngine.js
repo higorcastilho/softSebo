@@ -40,6 +40,7 @@ class BookSearchEngine extends Book {
 			this.author_name = author ? res.data.items[0].volumeInfo.authors[0] : ''
 
 			this.storageBook()
+			alert("Livro salvo com sucesso.")
 
 		}).catch(err => {
 			console.log(err)

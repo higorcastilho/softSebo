@@ -2,9 +2,8 @@
 
 class AppController {
 	index() {
-		return 'Hello Worlddddd'
+		return 'Hello Worldddddaa'
 	}
 }
 
 module.exports = AppController
-
